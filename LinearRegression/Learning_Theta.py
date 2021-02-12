@@ -47,16 +47,32 @@ print ("Pseudo Inverse normalization error for b) m = 100 : ", nomalized_error_b
 theta_hat_pinv = np.dot(np.linalg.pinv(part_b_3[0]), part_b_3[2]) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
 nomalized_error_b3 = np.linalg.norm(theta_hat_pinv - np.array([[1], [4], [2], [10], [23]]))
 print ("Pseudo Inverse normalization error for b) m = 1000 : ", nomalized_error_b3)
-
 #Plot
 plot = plt.gca();
-plot.scatter(30, part_a_1[1]);
+plot.scatter(30, nomalized_error_a1, label = "part_a_1");
+plot.scatter(100, nomalized_error_a2, label = "part_a_2");
+plot.scatter(1000, nomalized_error_a3, label = "part_a_3");
 # naming the x axis 
 plt.xlabel('m values') 
 # naming the y axis 
 plt.ylabel('error') 
 # giving a title to my graph 
-plt.title('Part 1 results') 
+plt.title('Part 1 results for a') 
+# show a legend on the plot 
+plt.legend() 
+# function to show the plot 
+plt.show() 
+
+plot = plt.gca();
+plot.scatter(30, nomalized_error_b1, label = "part_b_1");
+plot.scatter(100, nomalized_error_b2, label = "part_b_2");
+plot.scatter(1000, nomalized_error_b3, label = "part_b_3");
+# naming the x axis 
+plt.xlabel('m values') 
+# naming the y axis 
+plt.ylabel('error') 
+# giving a title to my graph 
+plt.title('Part 1 results for b') 
 # show a legend on the plot 
 plt.legend() 
 # function to show the plot 
