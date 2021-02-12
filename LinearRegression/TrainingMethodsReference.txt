@@ -12,10 +12,7 @@ X = np.random.randn(m, n)
 nois = (nois_var)**1/2 * np.random.randn(m, 1)
 print("B", X)
 y = np.dot(X, theta_true) + nois
-print(theta_true)
-print("A",y)
 
-print("C", nois)
 #pseudo-inverse
 theta_hat_pinv = np.dot(np.linalg.pinv(X), y) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
 print (np.linalg.norm(theta_hat_pinv -theta_true))

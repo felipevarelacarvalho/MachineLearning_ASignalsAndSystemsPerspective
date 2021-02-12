@@ -1,1 +1,1 @@
-theta_true = np.random.randn(n,1)
+theta_hat_pinv

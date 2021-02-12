@@ -2,6 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt 
 from SimulatedSyntheticData import SimulateSyntheticData
+from TrainingMethods import PseudoInverse
+from TrainingMethods import NormalEquation
+from TrainingMethods import GradientDescent
 
 #generate test data
 #SimulateSyntheticData(m, n, mu, covariance, theta)
@@ -21,37 +24,65 @@ part_c_1 = SimulateSyntheticData(30, 5, [0], 10**(-4),  np.array([[1], [4], [2],
 part_c_2 = SimulateSyntheticData(100, 5, [0], 10**(-4),  np.array([[1], [4], [2], [10], [23]]) )
 part_c_3 = SimulateSyntheticData(1000, 5, [0], 10**(-4),  np.array([[1], [4], [2], [10], [23]]) )
 
+theta_array = np.array([[1], [4], [2], [10], [23]])
 #pseudo-inverse
 #For a)
-theta_hat_pinv = np.dot(np.linalg.pinv(part_a_1[0]), part_a_1[2]) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
-nomalized_error_a1 = np.linalg.norm(theta_hat_pinv - np.array([[1], [4], [2], [10], [23]]))
-print ("Pseudo Inverse normalization error for a) m = 30 : ", nomalized_error_a1 )
+pseudo_inverse = PseudoInverse(part_a_1[0], part_a_1[2], theta_array ) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
+pseudo_inverse_error_a1 = pseudo_inverse[1]
+print ("Pseudo Inverse normalization error for a) m = 30 : ", pseudo_inverse_error_a1 )
 
-theta_hat_pinv = np.dot(np.linalg.pinv(part_a_2[0]), part_a_2[2]) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
-nomalized_error_a2 = np.linalg.norm(theta_hat_pinv - np.array([[1], [4], [2], [10], [23]]))
-print ("Pseudo Inverse normalization error for a) m = 100 : ", nomalized_error_a2 )
+pseudo_inverse = PseudoInverse(part_a_2[0], part_a_2[2], theta_array ) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
+pseudo_inverse_error_a2 = pseudo_inverse[1]
+print ("Pseudo Inverse normalization error for a) m = 100 : ", pseudo_inverse_error_a2 )
 
-theta_hat_pinv = np.dot(np.linalg.pinv(part_a_3[0]), part_a_3[2]) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
-nomalized_error_a3 = np.linalg.norm(theta_hat_pinv - np.array([[1], [4], [2], [10], [23]]))
-print ("Pseudo Inverse normalization error for a) m = 1000 : ",nomalized_error_a3 )
-print("\n")
+pseudo_inverse = PseudoInverse(part_a_3[0], part_a_3[2], theta_array ) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
+pseudo_inverse_error_a3 = pseudo_inverse[1]
+print ("Pseudo Inverse normalization error for a) m = 1000 : ",pseudo_inverse_error_a3 )
 #For b)
-theta_hat_pinv = np.dot(np.linalg.pinv(part_b_1[0]), part_b_1[2]) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
-nomalized_error_b1 = np.linalg.norm(theta_hat_pinv - np.array([[1], [4], [2], [10], [23]]))
-print ("Pseudo Inverse normalization error for b) m = 30 : ",nomalized_error_b1 )
+pseudo_inverse = PseudoInverse(part_b_1[0], part_b_1[2], theta_array ) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
+pseudo_inverse_error_b1 = pseudo_inverse[1]
+print ("Pseudo Inverse normalization error for b) m = 30 : ",pseudo_inverse_error_b1 )
 
-theta_hat_pinv = np.dot(np.linalg.pinv(part_b_2[0]), part_b_2[2]) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
-nomalized_error_b2 = np.linalg.norm(theta_hat_pinv - np.array([[1], [4], [2], [10], [23]]))
-print ("Pseudo Inverse normalization error for b) m = 100 : ", nomalized_error_b2)
+pseudo_inverse = PseudoInverse(part_b_2[0], part_b_2[2], theta_array ) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
+pseudo_inverse_error_b2 = pseudo_inverse[1]
+print ("Pseudo Inverse normalization error for b) m = 100 : ", pseudo_inverse_error_b2)
 
-theta_hat_pinv = np.dot(np.linalg.pinv(part_b_3[0]), part_b_3[2]) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
-nomalized_error_b3 = np.linalg.norm(theta_hat_pinv - np.array([[1], [4], [2], [10], [23]]))
-print ("Pseudo Inverse normalization error for b) m = 1000 : ", nomalized_error_b3)
+pseudo_inverse = PseudoInverse(part_b_3[0], part_b_3[2], theta_array ) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
+pseudo_inverse_error_b3 = pseudo_inverse[1]
+print ("Pseudo Inverse normalization error for b) m = 1000 : ", pseudo_inverse_error_b3)
+print("\n")
+
+#normal equation
+#for a)
+normal_Equation = NormalEquation(part_a_1[0], part_a_1[2], theta_array )
+normal_error_a1 = normal_Equation[1]
+print("Normal Equation normalized error for a) m = 30 : ", normal_error_a1)
+
+normal_Equation = NormalEquation(part_a_2[0], part_a_2[2], theta_array )
+normal_error_a2 = normal_Equation[1]
+print("Normal Equation normalized error for a) m = 100 : ", normal_error_a2)
+
+normal_Equation = NormalEquation(part_a_3[0], part_a_3[2], theta_array )
+normal_error_a3 = normal_Equation[1]
+print("Normal Equation normalized error for a) m = 1000 : ", normal_error_a3)
+
+normal_Equation = NormalEquation(part_b_1[0], part_b_1[2], theta_array )
+normal_error_b1 = normal_Equation[1]
+print("Normal Equation normalized error for b) m = 30 : ", normal_error_b1)
+
+normal_Equation = NormalEquation(part_b_2[0], part_b_2[2], theta_array )
+normal_error_b2 = normal_Equation[1]
+print("Normal Equation normalized error for b) m = 100 : ", normal_error_b2)
+
+normal_Equation = NormalEquation(part_b_3[0], part_b_3[2], theta_array )
+normal_error_b3 = normal_Equation[1]
+print("Normal Equation normalized error for b) m = 1000 : ", normal_error_b3)
+
 #Plot
 plot = plt.gca();
-plot.scatter(30, nomalized_error_a1, label = "part_a_1");
-plot.scatter(100, nomalized_error_a2, label = "part_a_2");
-plot.scatter(1000, nomalized_error_a3, label = "part_a_3");
+plot.scatter(30, pseudo_inverse_error_a1, label = "part_a_1");
+plot.scatter(100, pseudo_inverse_error_a2, label = "part_a_2");
+plot.scatter(1000, pseudo_inverse_error_a3, label = "part_a_3");
 # naming the x axis 
 plt.xlabel('m values') 
 # naming the y axis 
@@ -64,9 +95,9 @@ plt.legend()
 plt.show() 
 
 plot = plt.gca();
-plot.scatter(30, nomalized_error_b1, label = "part_b_1");
-plot.scatter(100, nomalized_error_b2, label = "part_b_2");
-plot.scatter(1000, nomalized_error_b3, label = "part_b_3");
+plot.scatter(30, pseudo_inverse_error_b1, label = "part_b_1");
+plot.scatter(100, pseudo_inverse_error_b2, label = "part_b_2");
+plot.scatter(1000, pseudo_inverse_error_b3, label = "part_b_3");
 # naming the x axis 
 plt.xlabel('m values') 
 # naming the y axis 
