@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "D:\\anaconda3\\python.exe"
+    "python.pythonPath": "D:\\anaconda3\\python.exe",
+    "python.envFile": ".env",
+    "python.autoComplete.extraPaths": ["./LinearRegression/SimulatedSyntheticData.py"],
 }
