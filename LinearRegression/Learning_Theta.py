@@ -108,3 +108,6 @@ plt.title('Part 1 results for b')
 plt.legend() 
 # function to show the plot 
 plt.show() 
+
+#TODO 
+#Make plor for Normal Equation
