@@ -1,0 +1,33 @@
+def SimulateSytheticMeanValueData(m, n, mu, covariance_squared, theta):
+    x_tilde  = np.zeros((2,1))   
+    error_array = np.zeros((m,1))
+    y_array = np.zeros((m,n))
+    i = 0;
+    j = 0;
+    theta_not = np.mean(theta)
+    #Genrate x-tilde value list. Each elemnt in the list contains a row of n 2d arrays
+    #Each 2D array will be of little_x will be horizontal, we will need to transpose each 2d array to make it vertical
+    x_list = [[[0 for var in range(2)] for i in range(n)] for j in range(m)] #Generate a triple nested list
+    theta_list = [[0 for var in range(2)] for i in range(len(theta))]
+    #Fill all 2D array with ones as the first element
+    for i in range(m):
+        for j in range(n):
+            x_list[i][j][0] = 1
+
+    for i in range (len(theta)):
+        theta_list[i][0] = theta_not
+        theta_list[i][1] = theta[i]
+    #Generate data
+    for i in range(m):
+        for j in range(n):
+            x_list[i][j][1] = np.random.normal(np.mean(mu), 1, 1) 
+        error_array[i] = np.random.normal(0, covariance_squared, 1)
+
+    temp = [0]*n
+    y_array = [0]*m
+    for i in range(m):
+        for j in range(n):
+            temp[j] = np.dot((theta_list[j]), x_list[i][j])
+        y_array[i] = np.sum(temp) + error_array[i]
+    
+    return x_list, error_array, y_array

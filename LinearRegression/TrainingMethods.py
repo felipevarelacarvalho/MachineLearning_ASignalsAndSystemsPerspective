@@ -11,7 +11,7 @@ def NormalEquation(X, y, theta_true):
     theta_hat_norm = np.dot(np.dot(np.linalg.inv(np.dot(np.transpose(X), X)), np.transpose(X)),y)
     return theta_hat_norm, (np.linalg.norm(theta_hat_norm - theta_true))
 
-def GradientDescent(X, y, theta_true, mu, max_iterations):
+def GradientDescent(X, y, theta_true, mu, max_iter):
     #gradient descent
     theta_hat_gd = np.zeros_like(theta_true)
     for t in range(max_iter):

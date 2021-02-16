@@ -1,1 +1,1 @@
-theta_hat_pinv
+airfoil_self_noise.dat

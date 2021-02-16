@@ -8,10 +8,12 @@ def SimulateSyntheticData(m, n, mu, covariance_squared, theta):
     i = 0;
     j = 0;
 
+    mu_mean = np.mean(mu)
+    
     #Generate data
     for i in range(m):
         for j in range(n):
-            x_array[i][j] = np.random.normal(mu, len(mu), 1) 
+            x_array[i][j] = np.random.normal(mu_mean, 1, 1) 
         error_array[i] = np.random.normal(0, covariance_squared, 1)
     y_array = np.dot(x_array, theta) + error_array
 
@@ -21,8 +23,41 @@ def SimulateSyntheticData(m, n, mu, covariance_squared, theta):
     y_array_true = np.zeros((m,n))
     for i in range(m):
         for j in range(n):
-            x_array_true[i][j] = np.random.normal(mu, len(mu), 1) 
+            x_array_true[i][j] = np.random.normal(mu_mean, 1, 1) 
         error_array_true[i] = np.random.normal(0, covariance_squared, 1)
     y_array_true = np.dot(x_array_true, theta) + error_array_true
     
     return x_array, error_array, y_array, x_array_true, error_array_true, y_array_true
+
+def SimulateSytheticNonZeroMean(m, n, mu, covariance_squared, theta):
+
+    theta_tilde = np.zeros((len(theta)+1, 1)) 
+    theta_tilde[0] = np.mean(theta)
+    for i in range(len(theta)):
+        theta_tilde[i+1] = theta[i]
+    theta_tilde = theta_tilde.reshape(-1,1)
+
+    mu_mean = np.mean(mu)
+
+    x_array  = np.zeros((m,n+1))   
+    error_array = np.zeros((m,1))
+    y_array = np.zeros((m,1))
+
+    #Create x tilde
+    for i in range(m):
+        x_array[i][0] = 1
+    #Generate data
+    for i in range(m):
+        for j in range(n):
+            x_array[i][j + 1] = np.random.normal(mu_mean, 1, 1) 
+        error_array[i] = np.random.normal(0, covariance_squared, 1)
+    y_array = np.dot(x_array, theta_tilde) + error_array
+
+    return x_array, error_array, y_array, theta_tilde
+
+def SimulateSytheticDiagonalCovariance(m, n, mu, covariance_matrix, sigma_error_squared, theta):
+    x_array = np.random.multivariate_normal(mu, covariance_matrix, size = (m,n))
+    error_array = np.random.normal(0, sigma_error_squared, size = (m,1))
+    y_array = np.dot(x_array, theta)
+
+    return x_array, error_array, y_array
