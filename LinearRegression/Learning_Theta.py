@@ -67,6 +67,7 @@ theta_array = np.array([[1], [4], [2], [10], [23]])
 #pseudo-inverse
 #For a)
 pseudo_inverse = PseudoInverse(part_a_1[0], part_a_1[2], theta_array ) #Pseudo Inverse is = (A_transpose A)_Inverse)A_transpose
+print("TEST =", part_a_1[2])
 pseudo_inverse_error_a1 = pseudo_inverse[1]
 print ("Pseudo Inverse normalization error for a) m = 30 : ", pseudo_inverse_error_a1 )
 

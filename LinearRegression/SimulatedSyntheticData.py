@@ -4,7 +4,7 @@ import numpy as np
 def SimulateSyntheticData(m, n, mu, covariance_squared, theta):
     x_array  = np.zeros((m,n))   
     error_array = np.zeros((m,1))
-    y_array = np.zeros((m,n))
+    y_array = np.zeros(m)
     i = 0;
     j = 0;
 
@@ -13,19 +13,19 @@ def SimulateSyntheticData(m, n, mu, covariance_squared, theta):
     #Generate data
     for i in range(m):
         for j in range(n):
-            x_array[i][j] = np.random.normal(mu_mean, 1, 1) 
-        error_array[i] = np.random.normal(0, covariance_squared, 1)
-    y_array = np.dot(x_array, theta) + error_array
+            x_array[i][j] = np.random.randn(1, 1) + mu[j] 
+        error_array[i] = np.random.randn(1,1) * ( covariance_squared**(1/2) )
+        y_array[i] = np.matmul(theta.transpose(), x_array[i]) + error_array[i]
 
     #Test data generate
     x_array_true  = np.zeros((m,n))   
     error_array_true = np.zeros((m,1))
-    y_array_true = np.zeros((m,n))
+    y_array_true = np.zeros(m)
     for i in range(m):
         for j in range(n):
-            x_array_true[i][j] = np.random.normal(mu_mean, 1, 1) 
-        error_array_true[i] = np.random.normal(0, covariance_squared, 1)
-    y_array_true = np.dot(x_array_true, theta) + error_array_true
+            x_array_true[i][j] = np.random.randn(1, 1) + mu[j] 
+        error_array_true[i] = np.random.randn(1,1) * ( covariance_squared**(1/2) )
+    y_array_true = np.matmul(theta.transpose(), x_array_true[i]) + error_array_true[i]
     
     return x_array, error_array, y_array, x_array_true, error_array_true, y_array_true
 
