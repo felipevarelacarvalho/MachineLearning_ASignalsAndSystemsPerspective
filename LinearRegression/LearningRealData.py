@@ -22,13 +22,14 @@ y = np.array(y)
 y = y.reshape(-1,1)
 
 start = timeit.default_timer() #Starts  timer
-theta = GradientDescent(x, y, theta_array , 10**-3, 20)
+theta = GradientDescent(x, y, theta_array , 0.01, 1)
 stop = timeit.default_timer() #Stops timer
 print('Timer for learning theta is seconds: ', stop - start) #prints time
 
 #Calculate error
 error = 0;
 theta_approx  = theta[0]
+print(theta_approx)
 print(theta_approx)
 for i in range(len(y)):
     error = error +( (y[i] - np.matmul(theta_approx.transpose(), x[i]))**2 / len(y) )

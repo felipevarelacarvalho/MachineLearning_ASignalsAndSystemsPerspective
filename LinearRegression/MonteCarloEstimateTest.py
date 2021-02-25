@@ -8,14 +8,17 @@ from SimulatedSyntheticData import SimulateSytheticDiagonalCovariance
 from TrainingMethods import PseudoInverse
 from TrainingMethods import NormalEquation
 from TrainingMethods import GradientDescent
+from MonteCarloEstimate import MonteCarloEstimate
 
 #Parameters that we will be using for data generation
 #Our data will have x ∼ N (0, I), therefore, mean zero and covariance identity
 m = 80
 n = 100
-m_test = 100
+m_test = round(0.2*m)
+m_total = m - m_test
 theta = np.zeros(n)
 mu = np.zeros(n)
+sigma_epsilon_squared  = 0.01*( (np.linalg.norm(theta))**2 )
 
 #θ = [100, −99, 98, −97...1]'
 for i in range(n):
@@ -25,54 +28,146 @@ for i in range(n):
         theta[i] = - 100 + i
 theta = theta.transpose()
 
-sigma_epsilon_squared  = 0.01*( (np.linalg.norm(theta))**2 )
+errors_m80  = MonteCarloEstimate(m_total, n, m_test, mu, theta, sigma_epsilon_squared)
 
-#Generating training data
-training_data = SimulateSyntheticData(m, n, mu, sigma_epsilon_squared, theta)
+m = 100
+m_total = m - m_test
+m_test = round(0.2*m)
+errors_m100 = MonteCarloEstimate(m_total, n, m_test, mu, theta, sigma_epsilon_squared)
 
-#Learn theta
-theta_hat = PseudoInverse(training_data[0], training_data[2], theta)
+m = 120
+m_total = m - m_test
+m_test = round(0.2*m)
+errors_m120 = MonteCarloEstimate(m_total, n, m_test, mu, theta, sigma_epsilon_squared)
 
-#Generate testing data
-testing_data = SimulateSyntheticData(m_test, n, mu, sigma_epsilon_squared, theta)
-
-#Predict y_hat
-y_hat_test = np.matmul(theta_hat[0].transpose(), testing_data[0]) #y_hat = (theta_hat')(x_test)
-
-
-y_test = testing_data[2]
-x_test = testing_data[0]
-
-#Monte Carlo
-#Expected value (ytest - y_hattest)**2
-monte_carlo_numerator = 0
-monte_carlo_denominator = 0
-for i in range(m_test):
-    monte_carlo_numerator = monte_carlo_numerator + (y_test[i] - y_hat_test[i])**2
-monte_carlo_numerator = monte_carlo_numerator/ m_test
-#Expected value (ytest)**2
-for i in range(m_test):
-    monte_carlo_denominator = monte_carlo_denominator + (y_test[i]**2)
-monte_carlo_denominator = monte_carlo_denominator/ m_test
-
-monte_carlo_error = monte_carlo_numerator/monte_carlo_denominator
-print(monte_carlo_error)
-
-estimation_error  = ( np.linalg.norm(theta - theta_hat[0]) )**2 / ( (np.linalg.norm(theta))**2 )
-print(estimation_error)
+m = 400
+m_total = m - m_test
+m_test = round(0.2*m)
+errors_m400 = MonteCarloEstimate(m_total, n, m_test, mu, theta, sigma_epsilon_squared)
 
 
+print("Monte Carlo approximation when m = 80  : ", errors_m80[0], "Estimation error when m = 80 : ", errors_m80[1])
+print("Monte Carlo approximation when m = 100 : ", errors_m100[0], "Estimation error when m = 100 : ", errors_m100[1])
+print("Monte Carlo approximation when m = 120 : ", errors_m120[0], "Estimation error when m = 120 : ", errors_m120[1])
+print("Monte Carlo approximation when m = 400 : ", errors_m400[0], "Estimation error when m = 400 : ", errors_m400[1])
 plot = plt.gca();
-plot.scatter(80, monte_carlo_error, label = "part_a m = 30, Pseudo-Inverse");
-for index, value in enumerate([1]):
-    plot.annotate(monte_carlo_error, (80, monte_carlo_error))
+plot.scatter(80, errors_m80[0], label = "part_a m = 80, Monte Carlo");
+plot.annotate(errors_m80[0], (80, errors_m80[0]))
+plot.scatter(100, errors_m100[0], label = "part_a m = 100, Monte Carlo");
+plot.annotate(errors_m100[0], (100, errors_m100[0]))
+plot.scatter(120, errors_m120[0], label = "part_a m = 120, Monte Carlo");
+plot.annotate(errors_m120[0], (120, errors_m120[0]))
+plot.scatter(400, errors_m400[0], label = "part_a m = 400, Monte Carlo");
+plot.annotate(errors_m400[0], (400, errors_m400[0]))
 # naming the x axis 
 plt.xlabel('m values') 
 # naming the y axis 
 plt.ylabel('error') 
 # giving a title to my graph 
-plt.title('Part 1 results for a') 
+plt.title('Monte Carlo error, sigma squared = 0.01 norm squared of theta') 
 # show a legend on the plot 
 plt.legend() 
 # function to show the plot 
 plt.show() 
+
+plot = plt.gca();
+plot.scatter(80, errors_m80[1], label = "part_a m = 80, estimation error theta");
+plot.annotate(errors_m80[1], (80, errors_m80[1]))
+plot.scatter(100, errors_m100[1], label = "part_a m = 100, estimation error theta");
+plot.annotate(errors_m100[1], (100, errors_m100[1]))
+plot.scatter(120, errors_m120[1], label = "part_a m = 120, estimation error theta");
+plot.annotate(errors_m120[1], (120, errors_m120[1]))
+plot.scatter(400, errors_m400[1], label = "part_a m = 400, estimation error theta");
+plot.annotate(errors_m400[1], (400, errors_m400[1]))
+# naming the x axis 
+plt.xlabel('m values') 
+# naming the y axis 
+plt.ylabel('error') 
+# giving a title to my graph 
+plt.title('Estimation error, sigma squared = 0.01 norm squared of theta') 
+# show a legend on the plot 
+plt.legend() 
+# function to show the plot 
+plt.show() 
+
+print("\n")
+#Repeat process with new sigma
+#-------------------------------------------------------------------------------------------
+m = 80
+n = 100
+m_test = round(0.2*m)
+m_total = m - m_test
+theta = np.zeros(n)
+mu = np.zeros(n)
+sigma_epsilon_squared  = 0.1*( (np.linalg.norm(theta))**2 )
+
+#θ = [100, −99, 98, −97...1]'
+for i in range(n):
+    if (i%2 == 0):
+        theta[i] = 100 - i
+    else:
+        theta[i] = - 100 + i
+theta = theta.transpose()
+
+errors_m80  = MonteCarloEstimate(m, n, m_test, mu, theta, sigma_epsilon_squared)
+
+m = 100
+m_total = m - m_test
+m_test = round(0.2*m)
+errors_m100 = MonteCarloEstimate(m_total, n, m_test, mu, theta, sigma_epsilon_squared)
+
+m = 120
+m_total = m - m_test
+m_test = round(0.2*m)
+errors_m120 = MonteCarloEstimate(m_total, n, m_test, mu, theta, sigma_epsilon_squared)
+
+m = 400
+m_total = m - m_test
+m_test = round(0.2*m)
+errors_m400 = MonteCarloEstimate(m_total, n, m_test, mu, theta, sigma_epsilon_squared)
+
+
+print("Monte Carlo approximation when m = 80  : ", errors_m80[0], "Estimation error when m = 80 : ", errors_m80[1])
+print("Monte Carlo approximation when m = 100 : ", errors_m100[0], "Estimation error when m = 100 : ", errors_m100[1])
+print("Monte Carlo approximation when m = 120 : ", errors_m120[0], "Estimation error when m = 120 : ", errors_m120[1])
+print("Monte Carlo approximation when m = 400 : ", errors_m400[0], "Estimation error when m = 400 : ", errors_m400[1])
+plot = plt.gca();
+plot.scatter(80, errors_m80[0], label = "part_a m = 80, Monte Carlo");
+plot.annotate(errors_m80[0], (80, errors_m80[0]))
+plot.scatter(100, errors_m100[0], label = "part_a m = 100, Monte Carlo");
+plot.annotate(errors_m100[0], (100, errors_m100[0]))
+plot.scatter(120, errors_m120[0], label = "part_a m = 120, Monte Carlo");
+plot.annotate(errors_m120[0], (120, errors_m120[0]))
+plot.scatter(400, errors_m400[0], label = "part_a m = 400, Monte Carlo");
+plot.annotate(errors_m400[0], (400, errors_m400[0]))
+# naming the x axis 
+plt.xlabel('m values') 
+# naming the y axis 
+plt.ylabel('error') 
+# giving a title to my graph 
+plt.title('Monte Carlo error, sigma squared = 0.1 norm squared of theta') 
+# show a legend on the plot 
+plt.legend() 
+# function to show the plot 
+plt.show() 
+
+plot = plt.gca();
+plot.scatter(80, errors_m80[1], label = "part_a m = 80, estimation error theta");
+plot.annotate(errors_m80[1], (80, errors_m80[1]))
+plot.scatter(100, errors_m100[1], label = "part_a m = 100, estimation error theta");
+plot.annotate(errors_m100[1], (100, errors_m100[1]))
+plot.scatter(120, errors_m120[1], label = "part_a m = 120, estimation error theta");
+plot.annotate(errors_m120[1], (120, errors_m120[1]))
+plot.scatter(400, errors_m400[1], label = "part_a m = 400, estimation error theta");
+plot.annotate(errors_m400[1], (400, errors_m400[1]))
+# naming the x axis 
+plt.xlabel('m values') 
+# naming the y axis 
+plt.ylabel('error') 
+# giving a title to my graph 
+plt.title('Estimation error, sigma squared = 0.1 norm squared of theta') 
+# show a legend on the plot 
+plt.legend() 
+# function to show the plot 
+plt.show() 
+
