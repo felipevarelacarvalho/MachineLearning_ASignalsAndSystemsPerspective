@@ -11,17 +11,36 @@ def NormalEquation(X, y, theta_true):
     theta_hat_norm = np.dot(np.dot(np.linalg.inv(np.dot(np.transpose(X), X)), np.transpose(X)),y)
     return theta_hat_norm, (np.linalg.norm(theta_hat_norm - theta_true))
 
-def GradientDescent(X, y, theta_true, mu, max_iter):
-    theta_hat_gd = np.zeros_like(theta_true)
-    #m = len(y)
-    #cost_history = np.zeros(max_iter)
-    #theta_history = np.zeros((max_iter, 2))
-    for t in range(max_iter):
-        #prediction = np.dot(X, theta)
+
+def calculate_cost_gradient (X, y, theta):
+    y_hat = np.squeeze(X).dot(np.squeeze(theta))
+
+    cost = 2 * (y_hat - y) * x.T #\Del_(\theta) J(\theta) = (theta^T x - y)x^T
+    return cost
+
+def cost_function(x, y, theta):
+    m = len(y)
+    y_hat = np.dot(x, theta)
+    cost = (1/2*m)*np.sum(np.square(y_hat - y))
+    return cost
+
+def GradientDescent(X, y, theta_true, step_size, max_iter):
+    #Input
+        #X = Matrix of X, y = vector of y, theta_true = vector with weight theta, learning_rate, max_iter
+    #Output
+        #Theta hat = learned theta, #Normalized error
+
+    
+    theta_hat_gd = theta_true
+    m = len(y)
+    cost_error = np.zeros(max_iter)
+
+    for i in range(max_iter):
+        theta_approx = np.dot(X, theta_true)
+        theta_hat_gd = theta_hat_gd - (1/m) * step_size *(X.transpose().dot((theta_approx - y)))
+        cost_error[i] = cost_function(X, y,theta_hat_gd)
         
-        #theta = theta - (1/m) * mu*( X.T.dot((prediction - y)))
-        theta_hat_gd = theta_hat_gd - mu *(np.dot(np.dot(np.transpose(X), X),theta_hat_gd) - np.dot(np.transpose(X),y))
-        #theta_history[t, :] = theta.T
-        
-    return theta_hat_gd, (np.linalg.norm(theta_hat_gd - theta_true))
+
+    return theta_hat_gd, (np.linalg.norm(theta_hat_gd - theta_true)), cost_error
     #return theta
+    
